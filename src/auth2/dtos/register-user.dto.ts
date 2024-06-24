@@ -10,8 +10,20 @@ export class RegisterUserDto {
   readonly email: string;
 
   @IsNotEmpty()
+  readonly phone_number: string;
+
+  @IsNotEmpty()
   @IsString()
   @MinLength(6)
   readonly password: string;
+
+  @IsNotEmpty()
+  readonly roleId:string
+
+  @IsNotEmpty()
+  readonly gender: string;
+
+  @IsNotEmpty()
+  readonly birthDate: string;
 
 }

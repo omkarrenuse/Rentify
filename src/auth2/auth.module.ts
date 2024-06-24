@@ -8,20 +8,16 @@ import { UserSchema } from "src/models/user.model";
 import { AuthController } from "./auth.controller";
 
 @Module({
-    imports: [
+    imports: [ConfigModule,
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.registerAsync({
             imports: [ConfigModule],
+            useFactory: async (configService: ConfigService) => ({
+              secret: configService.get<string>('JWT_SECRET'),
+              signOptions: { expiresIn: configService.get<string | number>('JWT_EXPIRES') },
+            }),
             inject: [ConfigService],
-            useFactory: (config: ConfigService) => {
-                return {
-                    secret: config.get<string>('JWT_SECRET'),
-                    signOptions: {
-                        expiresIn: config.get<string | number>('JWT_EXPIRES')
-                    }
-                }
-            }
-        }),
+          }),
         MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])
     ],
     controllers: [AuthController],

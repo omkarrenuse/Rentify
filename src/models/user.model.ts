@@ -3,16 +3,26 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 
 export const UserSchema = new mongoose.Schema({
     name: { type: String },
-    mobile: { type: Number, required: true },
-    //totalPrice: { type: Number, required: true },
-    roleId:{ type:Number, required:true},
-    carsRented: [{ type: ObjectId, ref: 'CarsSchema'}]
+    phone_number: { type: String, required: false },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    gender: { type: String, required: false },
+    birthDate: { type: Date, required: true },
+    roleId: { type: ObjectId, required: true, ref: 'RolesSchema' },
+    carsRented: [{ type: ObjectId, ref: 'CarsSchema' }],
+    created_at: { type: Date, default: new Date() },
+    is_deleted: { type: Boolean, required: false, default: 0 }
 })
 
-export interface User extends Document{
-    id: string,
-    mobile: string,
-    totalPrice: number,
-    roleId:[number]
+export interface User extends Document {
+    _id: string,
+    phone_number: string,
+    email: string,
+    password: string,
+    gender: number,
+    birthDate: Date,
+    roleId: [number]
     carsRented: [number]
+    created_at: Date,
+    is_deleted: boolean
 }
