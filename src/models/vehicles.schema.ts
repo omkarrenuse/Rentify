@@ -1,7 +1,6 @@
-import { Schema } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 
-export const CarsSchema = new mongoose.Schema({
+export const VehicleSchema = new mongoose.Schema({
   carLicenseNumber: {
     type: mongoose.Schema.Types.String,
     required: true
@@ -26,22 +25,39 @@ export const CarsSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  dateTimeFrom: {
-    type: Date,
+  vehicleType: {
+    type: mongoose.Schema.Types.String,
     required: true
   },
-  dateTimeto: {
-    type: Date,
+  vehicleCapacity: {
+    type: Number,
     required: true
   },
+  // dateTimeFrom: {
+  //   type: Date,
+  //   required: true
+  // },
+  // dateTimeto: {
+  //   type: Date,
+  //   required: true
+  // },
   isBooked: {
     type: Boolean,
     required: true,
     default: false
   },
+  created_at: {
+    type: Date,
+    default: new Date()
+  },
+  is_deleted: {
+    type: Boolean,
+    required: false,
+    default: 0
+  }
 });
 
-export interface Cars extends Document {
+export interface Vehicles extends Document {
   _id: string;
   carLicenseNumber: string;
   manufacturer: string;
@@ -49,7 +65,11 @@ export interface Cars extends Document {
   basePrice: number;
   PPH: number;
   securityDeposit: number;
-  dateTimeFrom: Date;
-  dateTimeto: Date;
+  vehicleType: string;
+  vehicleCapacity: number;
+  // dateTimeFrom: Date;
+  // dateTimeto: Date;
   isBooked: boolean;
+  created_at: Date;
+  is_deleted: boolean;
 }

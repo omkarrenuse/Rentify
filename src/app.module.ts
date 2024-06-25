@@ -5,10 +5,12 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth2/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { RolesSchema } from './models/roles.model';
+import { PassportModule } from '@nestjs/passport';
 
 
 @Module({
-  imports: [ConfigModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({
     isGlobal: true, // Makes the ConfigModule global
   }),
   MongooseModule.forRoot('mongodb://localhost:27017/CarRentalApp'),
