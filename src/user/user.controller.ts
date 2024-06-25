@@ -1,7 +1,10 @@
-import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserLoginDto } from './dtos/login.users.dto';
 import { LoggingInterceptor } from 'src/client/interceptors/logging.interceptor';
+import { AuthGuard } from '@nestjs/passport';
+import { RoleGuard } from 'src/auth2/role.guard';
+import { Roles } from 'src/auth2/roles.decorator';
 
 @Controller('user')
 @UseInterceptors(LoggingInterceptor)
@@ -14,6 +17,26 @@ export class UserController {
         const hello = await this.userService.getHello();
         return {
             data:hello
+        }
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get('allvehicles')
+    async getAllVehicles(){
+        const vehicles = await this.userService.getAllVehicles();
+        return {
+            message: "Vehicles Data Fetched Successfully",
+            data: vehicles
+        }
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get('vehiclesbyfilter')
+    async searchVehicles(@Query('vehicleName') vehicleName: string, @Query('vehicleCapacity') vehicleCapacity: number){
+        const vehicles = await this.userService.searchVehicleByFilter(vehicleName, vehicleCapacity);
+        return {
+            message: "Vehicles Data Fetched Successfully",
+            data: vehicles
         }
     }
 
