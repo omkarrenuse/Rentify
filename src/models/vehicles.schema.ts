@@ -1,6 +1,11 @@
 import * as mongoose from 'mongoose';
 
 export const VehicleSchema = new mongoose.Schema({
+  mediaId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'MediaSchema'
+  },
   carLicenseNumber: {
     type: mongoose.Schema.Types.String,
     required: true

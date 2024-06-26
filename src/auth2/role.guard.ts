@@ -23,7 +23,6 @@ export class RoleGuard implements CanActivate {
 
             if (decoded) {
                 decodedRoleIdFromToken = decoded.roleId
-                console.log("decodedRoleIdFromToken",Types.ObjectId.createFromHexString(decodedRoleIdFromToken))
                 if (roles) {
                     for (const role of roles) {
                         const roleDetails = await this.rolesModel.findOne({role:role})

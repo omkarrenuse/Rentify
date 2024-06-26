@@ -1,6 +1,7 @@
 import { Injectable, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Media } from 'src/models/media.model';
 import { Roles } from 'src/models/roles.model';
 import { Vehicles } from 'src/models/vehicles.schema';
 
@@ -8,6 +9,7 @@ import { Vehicles } from 'src/models/vehicles.schema';
 export class AdminService {
   constructor(@InjectModel('Vehicles') private readonly vehiclesModel: Model<Vehicles>,
     @InjectModel('Roles') private readonly RolesModel: Model<Roles>,
+    @InjectModel('Media') private readonly MediaModel: Model<Media>,
   ) { }
 
   async addRoles(rolesData) {
@@ -18,10 +20,25 @@ export class AdminService {
     return addRole
   }
 
-  async addVehicle(vehicleData){
+  async upload(authorId, fileName, fileType, filePath) {
+
+    const media = await this.MediaModel.create({
+        data: {
+            creatorId: authorId,
+            fileName: fileName,
+            filePath: filePath,
+            fileType: fileType
+        }
+    })
+    return media.id;
+
+}
+
+  async addVehicle(vehicleData, mediaId){
     const {carLicenseNumber,manufacturer,carModel, vehicleType, vehicleCapacity, basePrice ,PPH, securityDeposit} = vehicleData;
 
     const newVehicle = await this.vehiclesModel.create({
+      mediaId: mediaId,
       carLicenseNumber,
       manufacturer,
       carModel,
@@ -34,4 +51,6 @@ export class AdminService {
 
     return newVehicle;
   }
+
+
 }
