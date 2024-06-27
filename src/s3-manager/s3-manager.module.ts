@@ -4,7 +4,7 @@ import { S3ManagerService } from './s3-manager.service';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ImageController } from './s3-manager.controller';
-import { AuthModule } from 'src/auth2/auth.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 
 @Module({

@@ -3,8 +3,8 @@ import { UserService } from './user.service';
 import { UserLoginDto } from './dtos/login.users.dto';
 import { LoggingInterceptor } from 'src/client/interceptors/logging.interceptor';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleGuard } from 'src/auth2/role.guard';
-import { Roles } from 'src/auth2/roles.decorator';
+import { RoleGuard } from 'src/auth/role.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Controller('user')
 @UseInterceptors(LoggingInterceptor)
@@ -22,23 +22,14 @@ export class UserController {
 
     @UseGuards(AuthGuard('jwt'))
     @Get('allvehicles')
-    async getAllVehicles(){
-        const vehicles = await this.userService.getAllVehicles();
+    async getAllVehicles(@Query('id') id:string, @Query('search') search: any){
+        const vehicles = await this.userService.getAllVehicles(id, search);
         return {
             message: "Vehicles Data Fetched Successfully",
             data: vehicles
         }
     }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Get('vehiclesbyfilter')
-    async searchVehicles(@Query('vehicleName') vehicleName: string, @Query('vehicleCapacity') vehicleCapacity: number){
-        const vehicles = await this.userService.searchVehicleByFilter(vehicleName, vehicleCapacity);
-        return {
-            message: "Vehicles Data Fetched Successfully",
-            data: vehicles
-        }
-    }
 
     @Post()
     async login(){

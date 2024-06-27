@@ -2,7 +2,7 @@ import { Controller, Get, Logger, Req, Res, UseGuards, UseInterceptors } from '@
 import { Request, Response } from 'express';
 import { S3ManagerService } from './s3-manager.service';
 import { StreamUtils } from './stream.utils';
-import { AuthService } from 'src/auth2/auth.service';
+import { AuthService } from 'src/auth/auth.service';
 import { LoggingInterceptor } from 'src/client/interceptors/logging.interceptor';
 
 

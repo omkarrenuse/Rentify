@@ -1,15 +1,15 @@
-import { Body, Controller, Get, Logger, Post, Req, Request, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Req, Request, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { LoggingInterceptor } from 'src/client/interceptors/logging.interceptor';
 import { AddRolesDto } from './dto/add-roles.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtStrategy } from 'src/auth2/strategies/jwt.strategy';
-import { RoleGuard } from 'src/auth2/role.guard';
-import { Roles } from 'src/auth2/roles.decorator';
+import { RoleGuard } from 'src/auth/role.guard';
+import { Roles } from 'src/auth/roles.decorator';
 import { AddVehicleDto } from './dto/add- vehicle.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { S3ManagerService } from 'src/s3-manager/s3-manager.service';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 
 @Controller('admin')
 @UseInterceptors(LoggingInterceptor)
@@ -36,7 +36,7 @@ export class AdminController {
     @Roles('Admin')
     @Post('addvehicle')
     @UseInterceptors(FileInterceptor('file'))
-    async uploadMedia(
+    async addNewVehicle(
         @Body() vehicleData: AddVehicleDto,
         @Req() req,
         @UploadedFile() file: Express.Multer.File,) {
@@ -51,7 +51,6 @@ export class AdminController {
         }      
 
         if (file) {
-
             // Handle file-based media upload
             const fileName = file.originalname
             let newVehicle;
@@ -92,6 +91,26 @@ export class AdminController {
         }
     }
 
+    @UseGuards(AuthGuard("jwt"))
+    @UseGuards(RoleGuard)
+    @Roles('Admin')
+    @Post('updatevehicle')
+    async updateVehicle(@Body() vehicleData: UpdateVehicleDto) {
+        const updatedVehicle = await this.adminService.updateVehicle(vehicleData);
+        return {
+            message: "Role added sucessfully",
+            data: updatedVehicle
+        };
+    }
+
+    @Delete('deletevehicle/:id')
+    async deleteVehicle(@Param('id') id: string ){
+        const deletedVehicle = await this.adminService.deleteVehicle(id);
+        return {
+            message: 'Vehicle Deleted Successfully',
+            data: deletedVehicle
+        }
+    }
 
     @Get('hello')
     async hello() {
