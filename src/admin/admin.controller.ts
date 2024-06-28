@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Req, Request, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Req, Request, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { LoggingInterceptor } from 'src/client/interceptors/logging.interceptor';
 import { AddRolesDto } from './dto/add-roles.dto';
@@ -10,12 +10,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { S3ManagerService } from 'src/s3-manager/s3-manager.service';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
+import mongoose, { Types } from 'mongoose';
 
 @Controller('admin')
 @UseInterceptors(LoggingInterceptor)
 export class AdminController {
     constructor(private readonly adminService: AdminService,
-        private readonly s3Service: S3ManagerService,   
+        private readonly s3Service: S3ManagerService,
         private readonly jwtService: JwtService
     ) { }
 
@@ -45,10 +46,10 @@ export class AdminController {
         let mediaId;
         let id;
         const token = req.headers.authorization.split(' ')[1];
-        const decoded = this.jwtService.decode(token)  
-        if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer'){
+        const decoded = this.jwtService.decode(token)
+        if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
             id = decoded.id
-        }      
+        }
 
         if (file) {
             // Handle file-based media upload
@@ -103,22 +104,18 @@ export class AdminController {
         };
     }
 
-    @Delete('deletevehicle/:id')
-    async deleteVehicle(@Param('id') id: string ){
+    @Put('deletevehicle/:id')
+    async deleteVehicle(@Param('id') vehicleId: string) {
+        let id;
+        try {
+            id = new Types.ObjectId(vehicleId)
+        } catch {
+            throw new Error('input must be a 24 character hex string, 12 byte Uint8Array, or an integer')
+        }
         const deletedVehicle = await this.adminService.deleteVehicle(id);
         return {
             message: 'Vehicle Deleted Successfully',
             data: deletedVehicle
         }
-    }
-
-    @Get('hello')
-    async hello() {
-        console.log("hello ")
-    }
-
-    @Post()
-    async login() {
-
     }
 }

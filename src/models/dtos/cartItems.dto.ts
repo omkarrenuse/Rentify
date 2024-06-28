@@ -4,6 +4,4 @@ export class CreateCartItemDto {
     @IsNotEmpty()
     vehicleId: string;
 
-    @IsNotEmpty()
-    time: number
   }

@@ -4,7 +4,6 @@ export class LoginUserDto {
 
   readonly email?: string;
 
-  @MaxLength(10)
   readonly phone_number?: string;
 
   @IsNotEmpty()

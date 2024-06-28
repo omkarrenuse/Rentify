@@ -30,7 +30,7 @@ export class AuthService {
             birthDate: new Date(birthDate)
         })
 
-        const token = this.jwtService.sign({ id: user._id, role: user.roleId })
+        const token = this.jwtService.sign({ userId: user._id, roleId: user.roleId })
         return { token }
     }
 
@@ -51,7 +51,7 @@ export class AuthService {
                 throw new UnauthorizedException("Invalid Password")
             }
         }
-        const token = this.jwtService.sign({ id: user._id, roleId: user.roleId })
+        const token = this.jwtService.sign({ userId: user._id, roleId: user.roleId })
         return { token }
     }
 
