@@ -6,12 +6,14 @@ import * as bcrypt from "bcryptjs"
 import { JwtService } from "@nestjs/jwt";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { LoginUserDto } from "./dtos/login-user.dto";
+import { Roles } from "src/models/roles.model";
 
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectModel('User') private readonly userModel: Model<User>,
+        @InjectModel('Role') private readonly rolesModel: Model<Roles>,
         private jwtService: JwtService
     ) { }
 
@@ -34,20 +36,21 @@ export class AuthService {
         return { token }
     }
 
-    async login(loginDto:LoginUserDto):Promise<{token: string}>{
-        const {email,phone_number, password} = loginDto;
+    async login(loginDto: LoginUserDto): Promise<{ token: string }> {
+        const {email, phone_number, password } = loginDto;
+     
         const user = await this.userModel.findOne({
             $or: [
-              { email: email },
-              { phone_number: phone_number }
+                { email: email },
+                { phone_number: phone_number }
             ]
-          });
-        if (!user){
+        });
+        if (!user) {
             throw new UnauthorizedException("Invalid email or phone_number")
-        }else{
+        } else {
             const isMatch = await bcrypt.compare(password, user.password);
 
-            if (!isMatch){
+            if (!isMatch) {
                 throw new UnauthorizedException("Invalid Password")
             }
         }
@@ -55,4 +58,23 @@ export class AuthService {
         return { token }
     }
 
+
+    async validateGoogleUser(profile: any): Promise<any> {
+        const {  name, email, phone_number, gender } = profile._json;
+        const {id }= profile
+        let user = await this.userModel.findOne({ email });
+        const role = await this.rolesModel.findOne({role:'User'})
+        if (!user) {
+            user = await this.userModel.create({
+                googleId: id,
+                name: name,
+                phone_number: phone_number,
+                email: email,
+                gender: gender,
+                roleId: role._id
+            });
+        }
+
+        return user;
+    }
 }

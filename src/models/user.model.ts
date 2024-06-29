@@ -10,9 +10,15 @@ export const UserSchema = new mongoose.Schema({
     name: { type: String },
     phone_number: { type: String, required: false },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    googleId: {type: String, required: false},
+    password: {
+        type: String,
+        required: function() {
+            return !this.googleId; // Require password if googleId is not provided
+        }
+    },
     gender: { type: String, required: false },
-    birthDate: { type: Date, required: true },
+    birthDate: { type: Date, required: false },
     roleId: { type: ObjectId, required: true, ref: 'RolesSchema' },
     carsRented: [{ type: ObjectId, ref: 'CarsSchema' }],
     planFrom: { type: Date, required: true, default: Date.now },
