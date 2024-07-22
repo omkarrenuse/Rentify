@@ -1,6 +1,11 @@
 import * as mongoose from 'mongoose';
 
 export const VehicleSchema = new mongoose.Schema({
+  mediaId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'MediaSchema'
+  },
   carLicenseNumber: {
     type: mongoose.Schema.Types.String,
     required: true
@@ -33,14 +38,14 @@ export const VehicleSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  // dateTimeFrom: {
-  //   type: Date,
-  //   required: true
-  // },
-  // dateTimeto: {
-  //   type: Date,
-  //   required: true
-  // },
+  dateTimeFrom: {
+    type: Date,
+    required: true
+  },
+  dateTimeto: {
+    type: Date,
+    required: true
+  },
   isBooked: {
     type: Boolean,
     required: true,
@@ -67,8 +72,8 @@ export interface Vehicles extends Document {
   securityDeposit: number;
   vehicleType: string;
   vehicleCapacity: number;
-  // dateTimeFrom: Date;
-  // dateTimeto: Date;
+  dateTimeFrom: Date;
+  dateTimeto: Date;
   isBooked: boolean;
   created_at: Date;
   is_deleted: boolean;
