@@ -1,13 +1,16 @@
 import { Injectable, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model, ObjectId, Types } from 'mongoose';
+import { Media } from 'src/models/media.model';
 import { Roles } from 'src/models/roles.model';
-import { User } from 'src/models/user.model';
+import { Vehicles } from 'src/models/vehicles.schema';
+import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 
 @Injectable()
 export class AdminService {
-  constructor(@InjectModel('User') private readonly adminModel: Model<User>,
+  constructor(@InjectModel('Vehicles') private readonly vehiclesModel: Model<Vehicles>,
     @InjectModel('Roles') private readonly RolesModel: Model<Roles>,
+    @InjectModel('Media') private readonly MediaModel: Model<Media>,
   ) { }
 
   async addRoles(rolesData) {
@@ -16,6 +19,60 @@ export class AdminService {
       role: role
     })
     return addRole
+  }
+
+  async upload(authorId, fileName, fileType, filePath) {
+
+    const media = await this.MediaModel.create({
+      data: {
+        creatorId: authorId,
+        fileName: fileName,
+        filePath: filePath,
+        fileType: fileType
+      }
+    })
+    return media.id;
+
+  }
+
+  async addVehicle(vehicleData, mediaId) {
+    const { carLicenseNumber, manufacturer, carModel, vehicleType, vehicleCapacity, basePrice, PPH, securityDeposit } = vehicleData;
+
+    const newVehicle = await this.vehiclesModel.create({
+      mediaId: mediaId,
+      carLicenseNumber,
+      manufacturer,
+      carModel,
+      vehicleType,
+      vehicleCapacity,
+      basePrice,
+      PPH,
+      securityDeposit
+    })
+
+    return newVehicle;
+  }
+
+  async updateVehicle(vehicleData: UpdateVehicleDto) {
+    const { id, carLicenseNumber, manufacturer, carModel, vehicleType, vehicleCapacity, basePrice, PPH, securityDeposit
+    } = vehicleData;
+
+    const updateFields = {};
+    for (const key in vehicleData) {
+      if (vehicleData[key] !== undefined) {
+        updateFields[key] = vehicleData[key];
+      }
+    }
+    const updatedVehicle = await this.vehiclesModel.updateOne({ _id: id }, { $set: updateFields }).exec();
+    return updatedVehicle;
+  }
+
+  async deleteVehicle(id: Types.ObjectId) {
+    try {
+      const deletedVehicle = await this.vehiclesModel.updateOne({ _id: id }, { $set: { is_deleted: true } }).exec();
+    }catch{
+      throw new Error('Vehicle Deletion interrupted')
+    }
   }
 
 }

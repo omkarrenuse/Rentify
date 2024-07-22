@@ -44,6 +44,28 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+#Add Roles
+#1st use addRoles Api:<br>
+http://localhost:5000/admin/addrole<br>
+#First add Admin<br>
+#Second add User
+
+<p align="left">
+  <a href="https://github.com/omkarrenuse/Rentify/assets/92789841/73db69dc-894f-4eb8-82f9-75fd279264c5" target="blank"><img src="https://github.com/omkarrenuse/Rentify/assets/92789841/73db69dc-894f-4eb8-82f9-75fd279264c5" height="200 width="800" alt="Postman Preveiw" /></a>
+</p>
+
+Find the onjectIds in DB for roles then, use these objectIds for new Admin and User Registeration as RoleIds:
+
+<p align="left">
+  <a href="https://github.com/omkarrenuse/Rentify/assets/92789841/6be9346c-3b5e-437d-b62e-03a45c42a1b7" target="blank"><img src="https://github.com/omkarrenuse/Rentify/assets/92789841/6be9346c-3b5e-437d-b62e-03a45c42a1b7" height="300 width="800" alt="Postman Preveiw" /></a>
+</p>
+
+Then add vehicles using the Admin Login Auth Token:
+
+<p align="left">
+  <a href="https://github.com/omkarrenuse/Rentify/assets/92789841/e20b4704-bec6-460d-a868-935caa3f3af7" target="blank"><img src="https://github.com/omkarrenuse/Rentify/assets/92789841/e20b4704-bec6-460d-a868-935caa3f3af7" height="300 width="800" alt="Postman Preveiw" /></a>
+</p>
+
 
 ## Test
 

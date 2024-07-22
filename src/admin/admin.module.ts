@@ -4,13 +4,16 @@ import { UserSchema } from 'src/models/user.model';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { RolesSchema } from 'src/models/roles.model';
-import { AuthModule } from 'src/auth2/auth.module';
 import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+import { VehicleSchema } from 'src/models/vehicles.schema';
+import { S3ManagerModule } from 'src/s3-manager/s3-manager.module';
+import { MediaSchema } from 'src/models/media.model';
 
 @Module({
-  imports: [AuthModule,JwtModule,
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }, { name: 'Roles', schema: RolesSchema }])],
+  imports: [JwtModule,
+    MongooseModule.forFeature([{ name: 'Roles', schema: RolesSchema },{ name: 'Vehicles', schema: VehicleSchema},{name: 'Media', schema: MediaSchema}]),
+    S3ManagerModule
+  ],
   controllers: [AdminController],
   providers: [AdminService],
 })

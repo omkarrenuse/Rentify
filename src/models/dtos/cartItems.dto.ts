@@ -1,8 +1,7 @@
 import { IsNotEmpty } from "class-validator";
 
-export class AddRolesDto {
-
+export class CreateCartItemDto {
     @IsNotEmpty()
-    role: string
-}
+    vehicleId: string;
 
+  }
